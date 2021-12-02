@@ -2,7 +2,6 @@ with open("input.txt", "r", newline="\r\n", encoding="utf-8") as f:
     num_list = []
     for line in f.readlines():
         num_list.append(line.rstrip("\r\n"))
-
     # num_list = ['a','b','c','d','e','f','g','h','i','j','k','l','m','o','p','q','r','s','t','u','v','w','x','y','z']
     size = 3
     step = 1
@@ -23,7 +22,6 @@ with open("input.txt", "r", newline="\r\n", encoding="utf-8") as f:
         if total > previous_total:
             total_greater_than += 1
 
+        previous_total = total # I forgot this
+
     print(total_greater_than - 1)
-
-
-    # print(slide_list)
