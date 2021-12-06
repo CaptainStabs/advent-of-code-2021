@@ -3,61 +3,73 @@ import json
 class ValidatePassports():
     def __init__(self, credential):
         self.credential = credential
+        self.validate_passports()
 
     def validate_byr(self):
-        if len(self.credential["byr"]) == 4:
-            if int(self.credential["byr"]) <= 2002 and int(self.credential["byr"]) >= 1920:
-                self.credential["byr"]["valid"] = True
+        try:
+            if len(self.credential["byr"]) == 4:
+                return int(self.credential["byr"]) <= 2002 and int(self.credential["byr"]) >= 1920
             else:
-                self.credential["byr"]["valid"] = False
-        else:
-            self.credential["byr"]["valid"] = False
+                return False
+        except KeyError:
+            return False
 
     def validate_iyr(self):
-        if len(self.credential["iyr"]) == 4:
-            if int(self.credential["iyr"] >= 2010 and int(self.credential["iyr"] <= 2020):
-                self.credential["iyr"]["valid"] = True
+        try:
+            if len(self.credential["iyr"]) == 4:
+                return int(self.credential["iyr"]) >= 2010 and int(self.credential["iyr"]) <= 2020
             else:
-                self.credential["iyr"]["valid"] = False
-
-        else:
-            self.credential["iyr"]["valid"] = False
+                return False
+        except KeyError:
+            return False
 
     def validate_eyr(self):
-        if len(self.credential["eyr"]) == 4:
-            if int(self.credential["eyr"] >= 2020) and int(self.credential["eyr"]) <= 2030:
-                self.credential["eyr"]["valid"] = True
+        try:
+            if len(self.credential["eyr"]) == 4:
+                return int(self.credential["eyr"]) >= 2020 and int(self.credential["eyr"]) <= 2030
+
             else:
-                self.credential["eyr"]["valid"] = False
-        else:
-            self.credential["eyr"]["valid"] = False
+                return False
+        except KeyError:
+            return False
 
     def validate_hgt(self):
-        if self.credential["hgt"][-2:] == "cm":
-            if int(self.credential["hgt"][:-2]) >= 150 and int(self.credential["hgt"][:-2] <= 193):
-                self.credential["hgt"]["valid"] = True
-            else:
-                self.credential["hgt"]["valid"] = False
+        try:
+            if self.credential["hgt"][-2:] == "cm":
+                return int(self.credential["hgt"][:-2]) >= 150 and int(self.credential["hgt"][:-2]) <= 193
 
-        elif self.credential["hgt"][-2:] == "in":
-            if int(self.credential["hgt"]) >= 59 and int(self.credential["hgt"]) <= 76:
-                self.credential["hgt"]["valid"] = True
-            else:
-                self.credential["hgt"]["valid"] = False
+            elif self.credential["hgt"][-2:] == "in":
+                return int(self.credential["hgt"][:-2]) >= 59 and int(self.credential["hgt"][:-2]) <= 76
+        except KeyError:
+            return False
 
     def validate_hcl(self):
-        if self.credential["hcl"][0] == "#" and self.credential["hcl"][1:].isalnum():
-            self.credential["hcl"]["valid"] = True
-        else:
-            self.credential["hcl"]["valid"] = False
+        try:
+            return self.credential["hcl"][0] == "#" and self.credential["hcl"][1:].isalnum()
+        except KeyError:
+            return False
 
-    def validate_ecl
+    def validate_ecl(self):
+        try:
+            return self.credential["ecl"] in ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
+        except KeyError:
+            return False
+
+    def validate_pid(self):
+        try:
+            return len(self.credential["pid"]) == 9
+        except KeyError:
+            return False
+
+    def validate_passports(self):
+        return (self.validate_byr() and self.validate_iyr() and self.validate_iyr() and self.validate_eyr()
+            and self.validate_hgt() and self.validate_hcl() and self.validate_ecl() and self.validate_pid())
 
 
 
 
 
-with open("example.txt", "r", newline="\r\n", encoding="utf-8") as f:
+with open("input.txt", "r", newline="\r\n", encoding="utf-8") as f:
     # Answer is one too low otherwise
     valid_passports = 1
     credentials = []
@@ -80,16 +92,14 @@ with open("example.txt", "r", newline="\r\n", encoding="utf-8") as f:
                 kv = key_value.split(":")
                 credential[kv[0]] = kv[1]
 
-            print(json.dumps(credential, indent=2))
-
-            # credential_dict = {}
-            print("\n" + str(credentials) + "\n")
-
-
+            credentials = " ".join(credentials)
             if credentials.count(":") == 8:
-                valid_passports += 1
+                if ValidatePassports(credential):
+                    valid_passports += 1
             elif credentials.count(":") == 7 and "cid" not in credentials:
-                valid_passports += 1
+                if ValidatePassports(credential):
+                    valid_passports += 1
+
 
             # print(credentials)
 
