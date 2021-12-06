@@ -18,4 +18,5 @@ def calculate_fish(days):
         print("Total fish: " + str(len(fish_list)))
 
 calculate_fish(80)
+# Will never finish
 calculate_fish(256)
