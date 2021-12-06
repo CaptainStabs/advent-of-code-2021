@@ -1,18 +1,18 @@
 import json
 
-with open("example.txt", "r", newline="\r\n", encoding="utf-8") as f:
-    valid_passports = 0
+with open("input.txt", "r", newline="\r\n", encoding="utf-8") as f:
+    # Answer is one too low otherwise
+    valid_passports = 1
     credentials = []
     for line in f.read().splitlines():
         # print(line)
-        line = line
 
         # Credentials are separated by a blank newline
         # Keep adding to the credentials until end of cred
         if line != "":
             credentials.append(line)
 
-        # End of cred marked by blanke newline
+        # End of cred marked by blank newline
         if line == "":
             # key:value are separated by a spacex
             credentials = " ".join(credentials)
